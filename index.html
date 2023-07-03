@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .grid-cell {
+      width: 30px;
+      height: 30px;
+      border: 1px solid black;
+    }
+    .palette-color {
+      width: 30px;
+      height: 30px;
+      border: 1px solid black;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    #color-inputs {
+      margin-bottom: 10px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var numRows = 24;
+      var numCols = 24;
+      var selectedColor = "";
+
+      // 격자 생성
+      for (var i = 0; i < numRows; i++) {
+        var row = $("<tr></tr>").appendTo("#grid");
+        for (var j = 0; j < numCols; j++) {
+          var cell = $("<td></td>").addClass("grid-cell").appendTo(row);
+          cell.click(function() {
+            $(this).css("background-color", selectedColor);
+          });
+        }
+      }
+
+      // 팔레트 생성
+      var palette = $("#palette");
+      var paletteRow = $("<div></div>").addClass("palette-row").appendTo(palette);
+
+      var paletteColors = ["red", "green", "blue", "yellow", "orange", "white", "black", "gray", "purple", "pink", "brown", "cyan", "magenta", "lime", "olive", "teal"];
+      for (var i = 0; i < paletteColors.length; i++) {
+        var color = paletteColors[i];
+        var colorDiv = $("<div></div>").addClass("palette-color").css("background-color", color).appendTo(paletteRow);
+        colorDiv.click(function() {
+          selectedColor = $(this).css("background-color");
+        });
+
+        if ((i + 1) % 16 === 0) {
+          paletteRow = $("<div></div>").addClass("palette-row").appendTo(palette);
+        }
+      }
+
+      // 색상 입력
+      var colorInputs = $("#color-inputs");
+      var rInput = $("<input>").attr("type", "number").attr("min", "0").attr("max", "255").appendTo(colorInputs);
+      var gInput = $("<input>").attr("type", "number").attr("min", "0").attr("max", "255").appendTo(colorInputs);
+      var bInput = $("<input>").attr("type", "number").attr("min", "0").attr("max", "255").appendTo(colorInputs);
+      var applyButton = $("<button>").text("Apply").appendTo(colorInputs);
+      applyButton.click(function() {
+        var r = parseInt(rInput.val());
+        var g = parseInt(gInput.val());
+        var b = parseInt(bInput.val());
+
+        if (isNaN(r) || isNaN(g) || isNaN(b) || r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+          alert("Invalid color values. Please enter values between 0 and 255.");
+        } else {
+          var color = "rgb(" + r + ", " + g + ", " + b + ")";
+          selectedColor = color;
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+    <div id="color-inputs">
+        R: <input type="number" min="0" max="255"> &nbsp;
+        G: <input type="number" min="0" max="255"> &nbsp;
+        B: <input type="number" min="0" max="255"> &nbsp;
+        <button>Apply</button>
+      </div>
+  <div id="palette"></div>
+  <table id="grid" style="border-collapse: collapse;"></table>
+</body>
+</html>
+<!--a.replace(/id="[^"]*"/g, '').replace(/class="[^"]*"/g, ' style="width: 30px; height: 30px; border: 1px solid black;"');;-->
